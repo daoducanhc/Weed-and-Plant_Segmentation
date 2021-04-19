@@ -45,7 +45,7 @@ name = 'outputs/ResUNet'
 classifier = classifier.WeedClassifier(model, device)
 
 model.train()
-history = classifier.train(train_loader, valid_loader, learning_rate=0.001, epochs=100, name=name)
+history = classifier.train(train_loader, valid_loader, learning_rate=0.001, epochs=50, name=name)
 
 model.eval()
 score = classifier.test(test_loader)
