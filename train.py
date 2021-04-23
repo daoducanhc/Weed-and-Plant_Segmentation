@@ -38,8 +38,6 @@ valid_loader = torch.utils.data.DataLoader(tumor_dataset, batch_size=BATCH_SIZE,
 test_loader = torch.utils.data.DataLoader(tumor_dataset, batch_size=1, sampler=test_sampler)
 
 FILTER_LIST = [16,32,64,128,256]
-# model = UNet.DynamicUNet(FILTER_LIST).to(device)
-# name = 'outputs/UNet'
 model = ResUNet.ResUNet(FILTER_LIST).to(device)
 name = 'outputs/ResUNet'
 classifier = classifier.WeedClassifier(model, device)

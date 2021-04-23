@@ -39,7 +39,6 @@ class WeedClassifier():
 
             print("\nEpoch {}/{}:".format(epoch+1, epochs))
             epoch_time = time.time()
-            # self.epoch_fit(trainLoader, validLoader)
             
             for phase in ['train', 'valid']:
                 epoch_loss, iteration = 0, 0
