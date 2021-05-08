@@ -34,11 +34,15 @@ model = ResUNet.ResUNet(FILTER_LIST).to(device)
 path = 'outputs/ResUNet.pt'
 
 classifier = classifier.WeedClassifier(model, device)
-if device == 'cpu':
+if str(device) == 'cpu':
     classifier.model.load_state_dict(torch.load(path, map_location='cpu'))
 else:
     classifier.model.load_state_dict(torch.load(path))
 
 model.eval()
 score = classifier.test(test_loader)
-print(f'\nDice Score {score}')
+# print(f'\nDice Score {score}')
+# Dice Score 0.8537711366007329
+
+print(f'\n mIoU Score {score}')
+# mIoU Score 0.7995237626468983
