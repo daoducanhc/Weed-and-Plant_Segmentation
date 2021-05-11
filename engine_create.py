@@ -4,7 +4,7 @@ import tensorrt as trt
 
 engine_name = 'outputs/ResUNet.plan'
 onnx_path = 'outputs/model.onnx'
-batch_size = 2
+batch_size = 1
 
 model = ModelProto()
 with open(onnx_path, 'rb') as f:

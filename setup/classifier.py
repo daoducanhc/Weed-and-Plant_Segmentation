@@ -15,7 +15,7 @@ class WeedClassifier():
             [0, 0, 0], # 0 for background
             [0, 255, 0], # 1 for plants
             [255, 0, 0]    # 2 for weeds
-        ]) 
+        ])
 
 
     def train(self, trainLoader, validLoader, learning_rate=0.001, epochs=20, name="state_dict_model"):
@@ -39,7 +39,7 @@ class WeedClassifier():
 
             print("\nEpoch {}/{}:".format(epoch+1, epochs))
             epoch_time = time.time()
-            
+
             for phase in ['train', 'valid']:
                 epoch_loss, iteration = 0, 0
 
@@ -65,7 +65,7 @@ class WeedClassifier():
                             self.optimizer.step()
 
                     epoch_loss += loss_val.item()
-                    
+
                 epoch_loss /= (iteration * dataLoader[phase].batch_size)
                 history[phase].append(epoch_loss)
 
@@ -117,9 +117,9 @@ class WeedClassifier():
         return mean_val_score
 
     def _dice_coefficient(self, predicted, target):
-        predicted = F.softmax(predicted, dim=1)              
+        predicted = F.softmax(predicted, dim=1)
         predicted = torch.argmax(predicted, dim=1)
-        
+
         predicted = predicted.view(-1)
         target = target.view(-1)
 
@@ -138,9 +138,9 @@ class WeedClassifier():
         return np.mean(coef_list)
 
     def _miou(self, predicted, target):
-        predicted = F.softmax(predicted, dim=1)              
+        predicted = F.softmax(predicted, dim=1)
         predicted = torch.argmax(predicted, dim=1)
-        
+
         predicted = predicted.view(-1)
         target = target.view(-1)
 
@@ -173,12 +173,12 @@ class WeedClassifier():
         rgb = data['rgb']
 
         image = image.view((-1, 4, 512, 512)).to(self.device)
-        
+
         output = self.model(image)
         # score = self._dice_coefficient(output, mask)
         score = self._miou(output, mask)
 
-        output = F.softmax(output, dim=1)              
+        output = F.softmax(output, dim=1)
         output = torch.argmax(output, dim=1)
 
         # image = image.numpy()
@@ -191,7 +191,8 @@ class WeedClassifier():
         return rgb, mask, output, score
 
     def _decode_segmap(self, mask):
-        mask = mask.numpy()
+        mask = mask.detach().cpu().clone().numpy()
+        # mask = mask.numpy()
         mask = np.resize(mask, (512, 512))
         r = mask.copy()
         g = mask.copy()
