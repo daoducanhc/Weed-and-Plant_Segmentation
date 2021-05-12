@@ -117,7 +117,7 @@ class WeedClassifier():
         return mean_val_score
 
     def _dice_coefficient(self, predicted, target):
-        predicted = F.softmax(predicted, dim=1)
+        # predicted = F.softmax(predicted, dim=1)
         predicted = torch.argmax(predicted, dim=1)
 
         predicted = predicted.view(-1)
@@ -138,7 +138,7 @@ class WeedClassifier():
         return np.mean(coef_list)
 
     def miou(self, predicted, target):
-        predicted = F.softmax(predicted, dim=1)
+        # predicted = F.softmax(predicted, dim=1)
         predicted = torch.argmax(predicted, dim=1)
 
         predicted = predicted.view(-1)
@@ -178,7 +178,7 @@ class WeedClassifier():
         # score = self._dice_coefficient(output, mask)
         score = self.miou(output, mask)
 
-        output = F.softmax(output, dim=1)
+        # output = F.softmax(output, dim=1)
         output = torch.argmax(output, dim=1)
 
         # image = image.numpy()
