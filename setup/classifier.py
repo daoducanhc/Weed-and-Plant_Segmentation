@@ -111,7 +111,7 @@ class WeedClassifier():
             output = self.model(image).cpu()
 
             # mean_val_score += self._dice_coefficient(output, mask)
-            mean_val_score += self._miou(output, mask)
+            mean_val_score += self.miou(output, mask)
 
         mean_val_score = mean_val_score / data_len
         return mean_val_score
@@ -137,7 +137,7 @@ class WeedClassifier():
 
         return np.mean(coef_list)
 
-    def _miou(self, predicted, target):
+    def miou(self, predicted, target):
         predicted = F.softmax(predicted, dim=1)
         predicted = torch.argmax(predicted, dim=1)
 
@@ -176,21 +176,21 @@ class WeedClassifier():
 
         output = self.model(image)
         # score = self._dice_coefficient(output, mask)
-        score = self._miou(output, mask)
+        score = self.miou(output, mask)
 
         output = F.softmax(output, dim=1)
         output = torch.argmax(output, dim=1)
 
         # image = image.numpy()
-        output = self._decode_segmap(output)
-        mask = self._decode_segmap(mask)
+        output = self.decode_segmap(output)
+        mask = self.decode_segmap(mask)
 
         # image = np.resize(image, (512, 512, 3))
         mask = np.resize(mask, (512, 512, 3))
         output = np.resize(output, (512, 512, 3))
         return rgb, mask, output, score
 
-    def _decode_segmap(self, mask):
+    def decode_segmap(self, mask):
         mask = mask.detach().cpu().clone().numpy()
         # mask = mask.numpy()
         mask = np.resize(mask, (512, 512))

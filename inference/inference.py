@@ -17,7 +17,7 @@ def do_inference(engine, input, data_type=np.float32):
         # Create a stream in which to copy inputs/outputs and run inference.
         stream = cuda.Stream()
 
-        input = np.array(input, dtype=np.float32, order='C')
+        input = np.array(input, dtype=data_type, order='C')
         h_input = input
 
         # Transfer input data to the GPU.
