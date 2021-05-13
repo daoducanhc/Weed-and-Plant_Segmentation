@@ -55,9 +55,7 @@ print('PyTorch score', score)
 engine = engine.load_engine('outputs/ResUNet.plan')
 input = sample['image'].view((-1, 4, 512, 512))
 
-DATA_TYPE = trt.float16
-
-inference_output = inference.do_inference(engine, input, data_type=DATA_TYPE)
+inference_output = inference.do_inference(engine, input)
 
 print('Inference score', classifier.miou(inference_output, sample['mask']))
 
@@ -65,8 +63,18 @@ print('Inference score', classifier.miou(inference_output, sample['mask']))
 # inference_output = F.softmax(inference_output, dim=1, dtype=DATA_TYPE)
 inference_output = torch.argmax(inference_output, dim=1)
 
+# unique, counts = np.unique(np.array(inference_output), return_counts=True)
+# print(dict(zip(unique, counts)))
+
 inference_output = classifier.decode_segmap(inference_output)
+
 # now inference_output treat same as output
 
 inference_output = Image.fromarray((inference_output * 255).astype(np.uint8))
-# print(mpimg.pil_to_array(inference_output)[0])
+
+unique, counts = np.unique(np.array(inference_output), return_counts=True)
+print(dict(zip(unique, counts)))
+
+output = Image.fromarray((output * 255).astype(np.uint8))
+unique, counts = np.unique(np.array(output), return_counts=True)
+print(dict(zip(unique, counts)))

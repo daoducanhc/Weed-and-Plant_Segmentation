@@ -7,17 +7,19 @@ import pycuda.driver as cuda
 import pycuda.autoinit
 import torch
 
-def do_inference(engine, input, data_type=trt.float32):
+def do_inference(engine, input):
     with engine.create_execution_context() as context:
-        h_input = cuda.pagelocked_empty(trt.volume(context.get_binding_shape(0)), dtype=trt.nptype(data_type))
-        h_output = cuda.pagelocked_empty(trt.volume(context.get_binding_shape(1)), dtype=trt.nptype(data_type))
+        # h_input = cuda.pagelocked_empty(trt.volume(context.get_binding_shape(0)), dtype=trt.nptype(data_type))
+        # h_output = cuda.pagelocked_empty(trt.volume(context.get_binding_shape(1)), dtype=trt.nptype(data_type))
+        h_input = cuda.pagelocked_empty(trt.volume(context.get_binding_shape(0)), dtype=np.float32)
+        h_output = cuda.pagelocked_empty(trt.volume(context.get_binding_shape(1)), dtype=np.float32)
         # Allocate device memory for inputs and outputs.
         d_input = cuda.mem_alloc(h_input.nbytes)
         d_output = cuda.mem_alloc(h_output.nbytes)
         # Create a stream in which to copy inputs/outputs and run inference.
         stream = cuda.Stream()
 
-        input = np.array(input, dtype=np.float16, order='C').ravel()
+        input = np.array(input, order='C').ravel()
         np.copyto(h_input, input)
 
         # Transfer input data to the GPU.
