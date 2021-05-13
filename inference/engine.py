@@ -14,9 +14,15 @@ def build_engine(onnx_path, shape=[2,4,512,512]):
     config = builder.create_builder_config()
     # convert GB to bytes: shift to left by 30 bits << 30
     # convert MB to bytes: shift to left by 20 bits << 20
-    config.max_workspace_size = 1 << 30
-    config.set_flag(trt.BuilderFlag.FP16)
+    config.max_workspace_size = 6 << 30
+    # config.set_flag(trt.BuilderFlag.FP16)
+    config.set_flag(trt.BuilderFlag.STRICT_TYPES)
     network.get_input(0).shape = shape
+
+    # print(type(builder))                      tensorrt.tensorrt.Builder
+    # print(builder.platform_has_fast_fp16)     True
+    # print(builder.platform_has_fast_int8)     True
+
     engine = builder.build_engine(network, config)
     return engine
 

@@ -8,8 +8,9 @@ from PIL import Image
 import os
 
 class WeedDataset(Dataset):
-    def __init__(self, root):
+    def __init__(self, root, random_transform=True):
         self.root = root
+        self.random_transform = random_transform
         self.random_transform = {'hflip': TF.hflip,
                                 'vflip': TF.vflip,
                                 'rotate': TF.rotate}
@@ -17,12 +18,12 @@ class WeedDataset(Dataset):
             [0, 0, 0], # 0 for background
             [0, 255, 0], # 1 for plants
             [255, 0, 0]    # 2 for weeds
-        ]) 
+        ])
 
     def __len__(self):
         return len(os.listdir(os.path.join(self.root, 'mask')))
 
-    def __getitem__(self, index):        
+    def __getitem__(self, index):
         rgb_name = os.path.join(self.root, 'rgb', str(index)+'.png')
         nir_name = os.path.join(self.root, 'nir', str(index)+'.png')
         mask_name = os.path.join(self.root, 'mask', str(index)+'.png')
@@ -46,7 +47,8 @@ class WeedDataset(Dataset):
         image = transforms.Resize((512, 512))(image)
         mask = transforms.Resize((512, 512))(mask)
 
-        image, mask, rgb = self._random_transform(image, mask, rgb)
+        if self.random_transform==True:
+            image, mask, rgb = self._random_transform(image, mask, rgb)
 
         mask = np.array(mask)
         mask = mask.astype(int)
