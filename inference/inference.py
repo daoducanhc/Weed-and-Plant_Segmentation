@@ -25,6 +25,7 @@ def do_inference(engine, input):
         # Transfer input data to the GPU.
         cuda.memcpy_htod_async(d_input, h_input, stream)
 
+        # Show time spent in each layer
         # context.profiler = trt.Profiler()
 
         # Run inference.
