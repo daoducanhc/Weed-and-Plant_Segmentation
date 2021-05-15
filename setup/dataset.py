@@ -28,24 +28,20 @@ class WeedDataset(Dataset):
         nir_name = os.path.join(self.root, 'nir', str(index)+'.png')
         mask_name = os.path.join(self.root, 'mask', str(index)+'.png')
 
-        rgb = Image.open(rgb_name)
+
+	    rgb = Image.open(rgb_name).convert('RGB')
         nir = Image.open(nir_name)
         mask = Image.open(mask_name)
 
-        ### Same result but need to import cv2 (for more than 4 channels concat)
-        # rgb = cv2.imread(rgb_name)
-        # rgb = cv2.cvtColor(rgb, cv2.COLOR_BGR2RGB)
-        # nir = cv2.imread(nir_name)
-        # nir = cv2.cvtColor(nir, cv2.COLOR_BGR2GRAY)
-        # merged = cv2.merge((rgb, nir))
-        # image = Image.fromarray(merged)
+        nir =nir.crop((171, 93, 1060, 592))
+
+        rgb = transforms.Resize((512, 512))(rgb)
+        nir = transforms.Resize((512, 512))(nir)
+        mask = transforms.Resize((512, 512))(mask)
 
         r,g,b = rgb.split()
         image = Image.merge('RGBA', (r,g,b,nir))
-
-        rgb = transforms.Resize((512, 512))(rgb)
         image = transforms.Resize((512, 512))(image)
-        mask = transforms.Resize((512, 512))(mask)
 
         if self.random_transform==True:
             image, mask, rgb = self._random_transform(image, mask, rgb)
