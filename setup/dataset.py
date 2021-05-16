@@ -8,9 +8,9 @@ from PIL import Image
 import os
 
 class WeedDataset(Dataset):
-    def __init__(self, root, random_transform=True):
+    def __init__(self, root, random_rotate=True):
         self.root = root
-        self.random_transform = random_transform
+        self.random_rotate = random_rotate
         self.random_transform = {'hflip': TF.hflip,
                                 'vflip': TF.vflip,
                                 'rotate': TF.rotate}
@@ -43,7 +43,7 @@ class WeedDataset(Dataset):
         image = Image.merge('RGBA', (r,g,b,nir))
         image = transforms.Resize((512, 512))(image)
 
-        if self.random_transform==True:
+        if self.random_rotate==True:
             image, mask, rgb = self._random_transform(image, mask, rgb)
 
         mask = np.array(mask)
