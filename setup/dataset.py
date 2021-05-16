@@ -29,7 +29,7 @@ class WeedDataset(Dataset):
         mask_name = os.path.join(self.root, 'mask', str(index)+'.png')
 
 
-	    rgb = Image.open(rgb_name).convert('RGB')
+        rgb = Image.open(rgb_name).convert('RGB')
         nir = Image.open(nir_name)
         mask = Image.open(mask_name)
 
